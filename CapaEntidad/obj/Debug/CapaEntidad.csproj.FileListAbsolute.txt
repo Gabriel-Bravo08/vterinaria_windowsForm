@@ -1,0 +1,6 @@
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaEntidad\bin\Debug\CapaEntidad.dll
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaEntidad\bin\Debug\CapaEntidad.pdb
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaEntidad\obj\Debug\CapaEntidad.csproj.AssemblyReference.cache
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaEntidad\obj\Debug\CapaEntidad.csproj.CoreCompileInputs.cache
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaEntidad\obj\Debug\CapaEntidad.dll
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaEntidad\obj\Debug\CapaEntidad.pdb
