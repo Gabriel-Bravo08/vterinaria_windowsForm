@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -64,5 +64,9 @@ namespace CapaEntidad
             get { return _estadoId; }
             set { _estadoId = value; }
         }
+
+        public string NombreCliente { get; set; }
+        public string NombreEspecie { get; set; }
+        public string NombreEstado { get; set; }
     }
 }

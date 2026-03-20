@@ -147,6 +147,36 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Frm_Citas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Citas.Designer.cs">
+      <DependentUpon>Frm_Citas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Clientes.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Clientes.Designer.cs">
+      <DependentUpon>Frm_Clientes.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Especialidades.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Especialidades.Designer.cs">
+      <DependentUpon>Frm_Especialidades.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Especies.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Especies.Designer.cs">
+      <DependentUpon>Frm_Especies.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_HistorialMedico.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_HistorialMedico.Designer.cs">
+      <DependentUpon>Frm_HistorialMedico.cs</DependentUpon>
+    </Compile>
     <Compile Include="Frm_Home.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -158,6 +188,36 @@
     </Compile>
     <Compile Include="Frm_Login.Designer.cs">
       <DependentUpon>Frm_Login.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Mascotas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Mascotas.Designer.cs">
+      <DependentUpon>Frm_Mascotas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Personal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Personal.Designer.cs">
+      <DependentUpon>Frm_Personal.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Razas.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Razas.Designer.cs">
+      <DependentUpon>Frm_Razas.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Roles.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Roles.Designer.cs">
+      <DependentUpon>Frm_Roles.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Frm_Servicios.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Frm_Servicios.Designer.cs">
+      <DependentUpon>Frm_Servicios.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -186,6 +246,9 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+    <Content Include="assets\adcivet_logo.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\CapaEntidad\CapaEntidad.csproj">

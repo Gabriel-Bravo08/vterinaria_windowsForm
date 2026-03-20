@@ -147,9 +147,20 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CD_Catalogos.cs" />
+    <Compile Include="CD_Citas.cs" />
+    <Compile Include="CD_Clientes.cs" />
     <Compile Include="CD_Connection.cs" />
+    <Compile Include="CD_Especialidades.cs" />
+    <Compile Include="CD_Especies.cs" />
+    <Compile Include="CD_HistorialMedico.cs" />
     <Compile Include="CD_Login.cs" />
+    <Compile Include="CD_Mascotas.cs" />
     <Compile Include="CD_Menu.cs" />
+    <Compile Include="CD_Personal.cs" />
+    <Compile Include="CD_Razas.cs" />
+    <Compile Include="CD_Roles.cs" />
+    <Compile Include="CD_Servicios.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -15,6 +15,7 @@ namespace CapaEntidad
         private DateTime _fechaCita;
         private int _estadoId;
         private string _notas;
+        private DateTime _fechaCreacion;
 
         public int CitaId
         {
@@ -56,6 +57,16 @@ namespace CapaEntidad
         {
             get { return _notas; }
             set { _notas = value; }
+        }
+
+        public string NombreMascota { get; set; }
+        public string NombreVeterinario { get; set; }
+        public string NombreEstado { get; set; }
+
+        public DateTime FechaCreacion
+        {
+            get { return _fechaCreacion; }
+            set { _fechaCreacion = value; }
         }
     }
 }

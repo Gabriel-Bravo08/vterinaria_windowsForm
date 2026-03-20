@@ -32,9 +32,12 @@ namespace CapaPresentacion
             this.cerrarSesionToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.statusStripPrincipal = new System.Windows.Forms.StatusStrip();
             this.tslUsuarioLabel = new System.Windows.Forms.ToolStripStatusLabel();
-            this.lblBienvenida = new System.Windows.Forms.Label();
+            this.pnlContainer = new System.Windows.Forms.Panel();
+            this.picLogo = new System.Windows.Forms.PictureBox();
             this.statusStripPrincipal.SuspendLayout();
             this.menuStripPrincipal.SuspendLayout();
+            this.pnlContainer.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).BeginInit();
             this.SuspendLayout();
             // 
             // menuStripPrincipal
@@ -44,7 +47,7 @@ namespace CapaPresentacion
             this.cerrarSesionToolStripMenuItem});
             this.menuStripPrincipal.Location = new System.Drawing.Point(0, 0);
             this.menuStripPrincipal.Name = "menuStripPrincipal";
-            this.menuStripPrincipal.Size = new System.Drawing.Size(800, 28);
+            this.menuStripPrincipal.Size = new System.Drawing.Size(984, 28);
             this.menuStripPrincipal.TabIndex = 0;
             this.menuStripPrincipal.Text = "menuStrip1";
             // 
@@ -62,9 +65,9 @@ namespace CapaPresentacion
             // 
             this.statusStripPrincipal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tslUsuarioLabel});
-            this.statusStripPrincipal.Location = new System.Drawing.Point(0, 428);
+            this.statusStripPrincipal.Location = new System.Drawing.Point(0, 539);
             this.statusStripPrincipal.Name = "statusStripPrincipal";
-            this.statusStripPrincipal.Size = new System.Drawing.Size(800, 22);
+            this.statusStripPrincipal.Size = new System.Drawing.Size(984, 22);
             this.statusStripPrincipal.TabIndex = 1;
             this.statusStripPrincipal.Text = "statusStrip1";
             // 
@@ -74,24 +77,32 @@ namespace CapaPresentacion
             this.tslUsuarioLabel.Size = new System.Drawing.Size(50, 17);
             this.tslUsuarioLabel.Text = "Usuario:";
             // 
-            // lblBienvenida
+            // pnlContainer
             // 
-            this.lblBienvenida.AutoSize = true;
-            this.lblBienvenida.Font = new System.Drawing.Font("Segoe UI", 24F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.lblBienvenida.ForeColor = System.Drawing.Color.SteelBlue;
-            this.lblBienvenida.Location = new System.Drawing.Point(240, 180);
-            this.lblBienvenida.Name = "lblBienvenida";
-            this.lblBienvenida.Size = new System.Drawing.Size(320, 45);
-            this.lblBienvenida.TabIndex = 2;
-            this.lblBienvenida.Text = "BIENVENIDO A ADCIVET";
+            this.pnlContainer.Controls.Add(this.picLogo);
+            this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlContainer.Location = new System.Drawing.Point(0, 28);
+            this.pnlContainer.Name = "pnlContainer";
+            this.pnlContainer.Size = new System.Drawing.Size(984, 511);
+            this.pnlContainer.TabIndex = 2;
+            // 
+            // picLogo
+            // 
+            this.picLogo.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.picLogo.Location = new System.Drawing.Point(0, 0);
+            this.picLogo.Name = "picLogo";
+            this.picLogo.Size = new System.Drawing.Size(984, 511);
+            this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom;
+            this.picLogo.TabIndex = 2;
+            this.picLogo.TabStop = false;
             // 
             // Frm_Home
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.lblBienvenida);
+            this.ClientSize = new System.Drawing.Size(984, 561);
+            this.Controls.Add(this.pnlContainer);
             this.Controls.Add(this.statusStripPrincipal);
             this.Controls.Add(this.menuStripPrincipal);
             this.MainMenuStrip = this.menuStripPrincipal;
@@ -103,6 +114,8 @@ namespace CapaPresentacion
             this.statusStripPrincipal.PerformLayout();
             this.menuStripPrincipal.ResumeLayout(false);
             this.menuStripPrincipal.PerformLayout();
+            this.pnlContainer.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.picLogo)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -114,6 +127,7 @@ namespace CapaPresentacion
         private System.Windows.Forms.ToolStripMenuItem cerrarSesionToolStripMenuItem;
         private System.Windows.Forms.StatusStrip statusStripPrincipal;
         private System.Windows.Forms.ToolStripStatusLabel tslUsuarioLabel;
-        private System.Windows.Forms.Label lblBienvenida;
+        private System.Windows.Forms.PictureBox picLogo;
+        private System.Windows.Forms.Panel pnlContainer;
     }
 }
