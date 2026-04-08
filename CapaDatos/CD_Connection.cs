@@ -6,7 +6,7 @@ namespace CapaDatos
 {
     public class CD_Connection
     {
-        private readonly string _connectionString = "Data Source=PC_ADMIN\\SQLENTERPRISE;Initial Catalog=DB_ADCIVET;Integrated Security=True;Trust Server Certificate=True";
+        private readonly string _connectionString = "Data Source=PC_ADMIN\\SQLENTERPRISE;Initial Catalog=DB_ADCIVETS;Integrated Security=True;Trust Server Certificate=True";
 
         public SqlConnection GetConnection()
         {

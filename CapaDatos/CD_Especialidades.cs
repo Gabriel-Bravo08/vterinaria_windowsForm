@@ -52,7 +52,12 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@nombreEspecialidad", obj.NombreEspecialidad);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
+                        
+                        SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                        cmd.Parameters.Add(idOut);
+
                         cmd.ExecuteNonQuery();
+                        idGenerado = (int)idOut.Value;
                         mensaje = "Especialidad creada correctamente.";
                     }
                 }

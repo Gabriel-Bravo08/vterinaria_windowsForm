@@ -1,8 +1,11 @@
 using CapaEntidad;
 using CapaLogicaNegocio;
+using CapaPresentacion.Modals;
+using CapaPresentacion.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -11,10 +14,9 @@ namespace CapaPresentacion
     public partial class Frm_Roles : Form
     {
         private readonly CN_Roles _negocio = new CN_Roles();
-        private BindingSource _bindingSource = new BindingSource();
         private List<Cls_Roles> _listaOriginal = new List<Cls_Roles>();
+        private BindingSource _bindingSource = new BindingSource();
         private readonly Cls_Personal _usuarioActual;
-        private int _rolIdSeleccionado = 0;
 
         public Frm_Roles(Cls_Personal usuario)
         {
@@ -25,29 +27,48 @@ namespace CapaPresentacion
         private void Frm_Roles_Load(object sender, EventArgs e)
         {
             ConfigurarGrid();
-            CargarEstados();
             ListarRoles();
+            VisualStyle.ApplyGridStyle(dgvData);
         }
 
         private void ConfigurarGrid()
         {
+            dgvData.RowTemplate.Height = 35;
+            dgvData.GridColor = System.Drawing.Color.FromArgb(235, 239, 242);
             dgvData.AutoGenerateColumns = false;
             dgvData.Columns.Clear();
+
+            var btnEditar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "📝",
+                Name = "btnEditar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEditar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEditar);
+
+            var btnEliminar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "🗑️",
+                Name = "btnEliminar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEliminar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEliminar);
+
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "RolId", Name = "rolId", HeaderText = "ID", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreRol", Name = "nombreRol", HeaderText = "Nombre", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "EstadoId", Name = "estadoId", HeaderText = "EstadoId", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado" });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreRol", Name = "nombreRol", HeaderText = "Descripción de Rol", Width = 300 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
 
             dgvData.DataSource = _bindingSource;
-        }
-
-        private void CargarEstados()
-        {
-            cboEstado.Items.Add(new { Valor = 1, Texto = "Activo" });
-            cboEstado.Items.Add(new { Valor = 2, Texto = "Inactivo" });
-            cboEstado.DisplayMember = "Texto";
-            cboEstado.ValueMember = "Valor";
-            cboEstado.SelectedIndex = 0;
         }
 
         private void ListarRoles()
@@ -56,97 +77,72 @@ namespace CapaPresentacion
             _bindingSource.DataSource = new BindingList<Cls_Roles>(_listaOriginal);
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private void btnNuevo_Click(object sender, EventArgs e)
         {
-            string mensaje;
-            Cls_Roles obj = new Cls_Roles()
+            using (var modal = new Frm_Roles_Modal())
             {
-                RolId = _rolIdSeleccionado,
-                NombreRol = txtNombre.Text.Trim(),
-                EstadoId = Convert.ToInt32(((dynamic)cboEstado.SelectedItem).Valor)
-            };
-
-            if (obj.RolId == 0)
-            {
-                int idGenerado;
-                mensaje = _negocio.Registrar(obj, out idGenerado);
-                if (idGenerado > 0)
+                if (modal.ShowDialog() == DialogResult.OK)
                 {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarRoles();
-                    LimpiarFormulario();
+                    string mensaje;
+                    int idGenerado;
+                    mensaje = _negocio.Registrar(modal.ObjetoResultado, out idGenerado);
+                    if (mensaje.Contains("correctamente") || idGenerado > 0)
+                    {
+                        MessageBox.Show("Rol registrado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarRoles();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else
-            {
-                bool resultado = _negocio.Editar(obj, out mensaje);
-                if (resultado)
-                {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarRoles();
-                    LimpiarFormulario();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnEliminar_Click(object sender, EventArgs e)
-        {
-            if (_rolIdSeleccionado == 0) return;
-            if (MessageBox.Show("¿Seguro de eliminar este rol?", "Confirme", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                string mensaje;
-                if (_negocio.Eliminar(_rolIdSeleccionado, out mensaje))
-                {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarRoles();
-                    LimpiarFormulario();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void LimpiarFormulario()
-        {
-            _rolIdSeleccionado = 0;
-            txtNombre.Clear();
-            cboEstado.SelectedIndex = 0;
-            txtNombre.Focus();
         }
 
         private void dgvData_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvData.CurrentRow != null)
+            if (e.RowIndex < 0) return;
+
+            if (dgvData.Columns[e.ColumnIndex].Name == "btnEditar")
             {
                 var r = (Cls_Roles)dgvData.CurrentRow.DataBoundItem;
-                _rolIdSeleccionado = r.RolId;
-                txtNombre.Text = r.NombreRol;
-                int estadoId = r.EstadoId;
-
-                for (int i = 0; i < cboEstado.Items.Count; i++)
+                using (var modal = new Frm_Roles_Modal(r))
                 {
-                    if (Convert.ToInt32(((dynamic)cboEstado.Items[i]).Valor) == estadoId)
+                    if (modal.ShowDialog() == DialogResult.OK)
                     {
-                        cboEstado.SelectedIndex = i;
-                        break;
+                        string mensaje;
+                        if (_negocio.Editar(modal.ObjetoResultado, out mensaje))
+                        {
+                            MessageBox.Show("Rol actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            ListarRoles();
+                        }
+                        else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+            }
+            else if (dgvData.Columns[e.ColumnIndex].Name == "btnEliminar")
+            {
+                var r = (Cls_Roles)dgvData.CurrentRow.DataBoundItem;
+                if (MessageBox.Show($"¿Desea eliminar el rol '{r.NombreRol}'?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    string mensaje;
+                    if (_negocio.Eliminar(r.RolId, out mensaje))
+                    {
+                        MessageBox.Show("Rol eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarRoles();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
 
-        private void btnLimpiar_Click(object sender, EventArgs e) => LimpiarFormulario();
-
-        public void btnBuscar_Click(object sender, EventArgs e)
+        private void btnBuscar_Click(object sender, EventArgs e)
         {
-            string busqueda = (txtBusqueda != null) ? txtBusqueda.Text.Trim().ToLower() : "";
+            string busqueda = txtBusqueda.Text.Trim().ToLower();
             if (string.IsNullOrEmpty(busqueda))
             {
                 _bindingSource.DataSource = new BindingList<Cls_Roles>(_listaOriginal);
             }
             else
             {
-                var filtrada = _listaOriginal.Where(x => 
+                var filtrada = _listaOriginal.Where(x =>
                     (x.NombreRol != null && x.NombreRol.ToLower().Contains(busqueda))
                 ).ToList();
                 _bindingSource.DataSource = new BindingList<Cls_Roles>(filtrada);

@@ -17,24 +17,15 @@ namespace CapaPresentacion
         {
             this.pnlHeader = new System.Windows.Forms.Panel();
             this.lblTitulo = new System.Windows.Forms.Label();
-            this.pnlForm = new System.Windows.Forms.Panel();
-            this.btnLimpiar = new System.Windows.Forms.Button();
-            this.btnEliminar = new System.Windows.Forms.Button();
-            this.btnGuardar = new System.Windows.Forms.Button();
-            this.cboEstado = new System.Windows.Forms.ComboBox();
-            this.lblEstado = new System.Windows.Forms.Label();
-            this.txtNombre = new System.Windows.Forms.TextBox();
-            this.lblNombre = new System.Windows.Forms.Label();
-            this.lblDetalle = new System.Windows.Forms.Label();
+            this.lblListado = new System.Windows.Forms.Label();
+            this.btnNuevo = new System.Windows.Forms.Button();
             this.dgvData = new System.Windows.Forms.DataGridView();
             this.pnlSearch = new System.Windows.Forms.Panel();
             this.btnBuscar = new System.Windows.Forms.Button();
             this.txtBusqueda = new System.Windows.Forms.TextBox();
             this.lblBuscar = new System.Windows.Forms.Label();
-            this.lblListado = new System.Windows.Forms.Label();
-            this.pnlHeader.SuspendLayout();
-            this.pnlForm.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).BeginInit();
+            this.pnlHeader.SuspendLayout();
             this.pnlSearch.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -59,109 +50,9 @@ namespace CapaPresentacion
             this.lblTitulo.TabIndex = 0;
             this.lblTitulo.Text = "GESTIÓN DE ROLES";
             // 
-            // pnlForm
             // 
-            this.pnlForm.BackColor = System.Drawing.Color.White;
-            this.pnlForm.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.pnlForm.Controls.Add(this.btnLimpiar);
-            this.pnlForm.Controls.Add(this.btnEliminar);
-            this.pnlForm.Controls.Add(this.btnGuardar);
-            this.pnlForm.Controls.Add(this.cboEstado);
-            this.pnlForm.Controls.Add(this.lblEstado);
-            this.pnlForm.Controls.Add(this.txtNombre);
-            this.pnlForm.Controls.Add(this.lblNombre);
-            this.pnlForm.Controls.Add(this.lblDetalle);
-            this.pnlForm.Dock = System.Windows.Forms.DockStyle.Left;
-            this.pnlForm.Location = new System.Drawing.Point(0, 50);
-            this.pnlForm.Name = "pnlForm";
-            this.pnlForm.Size = new System.Drawing.Size(260, 500);
-            this.pnlForm.TabIndex = 1;
+            // dgvData
             // 
-            // btnLimpiar
-            // 
-            this.btnLimpiar.BackColor = System.Drawing.Color.SkyBlue;
-            this.btnLimpiar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLimpiar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnLimpiar.ForeColor = System.Drawing.Color.White;
-            this.btnLimpiar.Location = new System.Drawing.Point(15, 270);
-            this.btnLimpiar.Name = "btnLimpiar";
-            this.btnLimpiar.Size = new System.Drawing.Size(230, 30);
-            this.btnLimpiar.TabIndex = 9;
-            this.btnLimpiar.Text = "LIMPIAR";
-            this.btnLimpiar.UseVisualStyleBackColor = false;
-            this.btnLimpiar.Click += new System.EventHandler(this.btnLimpiar_Click);
-            // 
-            // btnEliminar
-            // 
-            this.btnEliminar.BackColor = System.Drawing.Color.Tomato;
-            this.btnEliminar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnEliminar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnEliminar.ForeColor = System.Drawing.Color.White;
-            this.btnEliminar.Location = new System.Drawing.Point(15, 235);
-            this.btnEliminar.Name = "btnEliminar";
-            this.btnEliminar.Size = new System.Drawing.Size(230, 30);
-            this.btnEliminar.TabIndex = 8;
-            this.btnEliminar.Text = "ELIMINAR";
-            this.btnEliminar.UseVisualStyleBackColor = false;
-            this.btnEliminar.Click += new System.EventHandler(this.btnEliminar_Click);
-            // 
-            // btnGuardar
-            // 
-            this.btnGuardar.BackColor = System.Drawing.Color.MediumSeaGreen;
-            this.btnGuardar.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnGuardar.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
-            this.btnGuardar.ForeColor = System.Drawing.Color.White;
-            this.btnGuardar.Location = new System.Drawing.Point(15, 200);
-            this.btnGuardar.Name = "btnGuardar";
-            this.btnGuardar.Size = new System.Drawing.Size(230, 30);
-            this.btnGuardar.TabIndex = 7;
-            this.btnGuardar.Text = "GUARDAR";
-            this.btnGuardar.UseVisualStyleBackColor = false;
-            this.btnGuardar.Click += new System.EventHandler(this.btnGuardar_Click);
-            // 
-            // cboEstado
-            // 
-            this.cboEstado.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cboEstado.FormattingEnabled = true;
-            this.cboEstado.Location = new System.Drawing.Point(15, 145);
-            this.cboEstado.Name = "cboEstado";
-            this.cboEstado.Size = new System.Drawing.Size(230, 21);
-            this.cboEstado.TabIndex = 6;
-            // 
-            // lblEstado
-            // 
-            this.lblEstado.AutoSize = true;
-            this.lblEstado.Location = new System.Drawing.Point(12, 129);
-            this.lblEstado.Name = "lblEstado";
-            this.lblEstado.Size = new System.Drawing.Size(43, 13);
-            this.lblEstado.TabIndex = 5;
-            this.lblEstado.Text = "Estado:";
-            // 
-            // txtNombre
-            // 
-            this.txtNombre.Location = new System.Drawing.Point(15, 95);
-            this.txtNombre.Name = "txtNombre";
-            this.txtNombre.Size = new System.Drawing.Size(230, 20);
-            this.txtNombre.TabIndex = 2;
-            // 
-            // lblNombre
-            // 
-            this.lblNombre.AutoSize = true;
-            this.lblNombre.Location = new System.Drawing.Point(12, 79);
-            this.lblNombre.Name = "lblNombre";
-            this.lblNombre.Size = new System.Drawing.Size(47, 13);
-            this.lblNombre.TabIndex = 1;
-            this.lblNombre.Text = "Nombre:";
-            // 
-            // lblDetalle
-            // 
-            this.lblDetalle.AutoSize = true;
-            this.lblDetalle.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblDetalle.Location = new System.Drawing.Point(11, 20);
-            this.lblDetalle.Name = "lblDetalle";
-            this.lblDetalle.Size = new System.Drawing.Size(127, 21);
-            this.lblDetalle.TabIndex = 0;
-            this.lblDetalle.Text = "Detalle del Rol:";
             // 
             // dgvData
             // 
@@ -169,28 +60,40 @@ namespace CapaPresentacion
             this.dgvData.BackgroundColor = System.Drawing.Color.White;
             this.dgvData.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dgvData.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.dgvData.Location = new System.Drawing.Point(260, 100);
+            this.dgvData.Location = new System.Drawing.Point(0, 110);
             this.dgvData.Name = "dgvData";
             this.dgvData.ReadOnly = true;
             this.dgvData.RowHeadersVisible = false;
             this.dgvData.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
-            this.dgvData.Size = new System.Drawing.Size(640, 450);
+            this.dgvData.Size = new System.Drawing.Size(900, 440);
             this.dgvData.TabIndex = 2;
             this.dgvData.CellClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvData_CellClick);
             // 
-            // pnlSearch
-            // 
             this.pnlSearch.BackColor = System.Drawing.Color.White;
-            this.pnlSearch.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlSearch.Controls.Add(this.btnNuevo);
             this.pnlSearch.Controls.Add(this.btnBuscar);
             this.pnlSearch.Controls.Add(this.txtBusqueda);
             this.pnlSearch.Controls.Add(this.lblBuscar);
             this.pnlSearch.Controls.Add(this.lblListado);
             this.pnlSearch.Dock = System.Windows.Forms.DockStyle.Top;
-            this.pnlSearch.Location = new System.Drawing.Point(260, 50);
+            this.pnlSearch.Location = new System.Drawing.Point(0, 50);
             this.pnlSearch.Name = "pnlSearch";
-            this.pnlSearch.Size = new System.Drawing.Size(640, 50);
+            this.pnlSearch.Size = new System.Drawing.Size(900, 60);
             this.pnlSearch.TabIndex = 3;
+            // 
+            // btnNuevo
+            // 
+            this.btnNuevo.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.btnNuevo.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnNuevo.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.btnNuevo.ForeColor = System.Drawing.Color.White;
+            this.btnNuevo.Location = new System.Drawing.Point(15, 13);
+            this.btnNuevo.Name = "btnNuevo";
+            this.btnNuevo.Size = new System.Drawing.Size(120, 30);
+            this.btnNuevo.TabIndex = 4;
+            this.btnNuevo.Text = "+ NUEVO ROL";
+            this.btnNuevo.UseVisualStyleBackColor = false;
+            this.btnNuevo.Click += new System.EventHandler(this.btnNuevo_Click);
             // 
             // btnBuscar
             // 
@@ -225,7 +128,7 @@ namespace CapaPresentacion
             // 
             this.lblListado.AutoSize = true;
             this.lblListado.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
-            this.lblListado.Location = new System.Drawing.Point(10, 15);
+            this.lblListado.Location = new System.Drawing.Point(150, 20);
             this.lblListado.Name = "lblListado";
             this.lblListado.Size = new System.Drawing.Size(121, 21);
             this.lblListado.TabIndex = 0;
@@ -238,15 +141,12 @@ namespace CapaPresentacion
             this.ClientSize = new System.Drawing.Size(900, 550);
             this.Controls.Add(this.dgvData);
             this.Controls.Add(this.pnlSearch);
-            this.Controls.Add(this.pnlForm);
             this.Controls.Add(this.pnlHeader);
             this.Name = "Frm_Roles";
             this.Text = "Gestión de Roles";
             this.Load += new System.EventHandler(this.Frm_Roles_Load);
             this.pnlHeader.ResumeLayout(false);
             this.pnlHeader.PerformLayout();
-            this.pnlForm.ResumeLayout(false);
-            this.pnlForm.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvData)).EndInit();
             this.pnlSearch.ResumeLayout(false);
             this.pnlSearch.PerformLayout();
@@ -256,20 +156,12 @@ namespace CapaPresentacion
 
         private System.Windows.Forms.Panel pnlHeader;
         private System.Windows.Forms.Label lblTitulo;
-        private System.Windows.Forms.Panel pnlForm;
-        private System.Windows.Forms.Label lblDetalle;
-        private System.Windows.Forms.TextBox txtNombre;
-        private System.Windows.Forms.Label lblNombre;
-        private System.Windows.Forms.ComboBox cboEstado;
-        private System.Windows.Forms.Label lblEstado;
-        private System.Windows.Forms.Button btnGuardar;
-        private System.Windows.Forms.Button btnEliminar;
-        private System.Windows.Forms.Button btnLimpiar;
         private System.Windows.Forms.DataGridView dgvData;
         private System.Windows.Forms.Panel pnlSearch;
         private System.Windows.Forms.Button btnBuscar;
         private System.Windows.Forms.TextBox txtBusqueda;
         private System.Windows.Forms.Label lblBuscar;
         private System.Windows.Forms.Label lblListado;
+        private System.Windows.Forms.Button btnNuevo;
     }
 }

@@ -49,16 +49,17 @@ namespace CapaDatos
                     using (var cmd = new SqlCommand("[SQM_CATALOGS].[USP_Create_Especies]", cn))
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@nombreEspecie", obj.NombreEspecie);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
                         
-                        cmd.Parameters.Add("@Res_Id", SqlDbType.Int).Direction = ParameterDirection.Output;
-                        cmd.Parameters.Add("@Mensaje", SqlDbType.VarChar, 500).Direction = ParameterDirection.Output;
+                        SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                        cmd.Parameters.Add(idOut);
 
                         cmd.ExecuteNonQuery();
                         
-                        idGenerado = Convert.ToInt32(cmd.Parameters["@Res_Id"].Value);
-                        mensaje = cmd.Parameters["@Mensaje"].Value.ToString();
+                        idGenerado = (int)idOut.Value;
+                        mensaje = "Especie creada correctamente.";
                     }
                 }
             }

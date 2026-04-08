@@ -1,4 +1,4 @@
-﻿using CapaEntidad;
+using CapaEntidad;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -67,8 +67,12 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@peso", obj.Peso ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@color", obj.Color ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
+                        
+                        SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                        cmd.Parameters.Add(idOut);
 
                         cmd.ExecuteNonQuery();
+                        idGenerado = (int)idOut.Value;
                         mensaje = "Mascota creada correctamente.";
                     }
                 }

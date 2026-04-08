@@ -90,6 +90,7 @@ C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaPresentac
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaPresentacion\bin\Debug\Microsoft.Bcl.Cryptography.xml
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaPresentacion\bin\Debug\System.Security.Cryptography.Pkcs.xml
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\ADCIVET\CapaPresentacion\obj\Debug\CapaPresentacion.Frm_Login.resources
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\bin\Debug\assets\adcivet_logo.png
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\bin\Debug\CapaPresentacion.exe.config
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\bin\Debug\CapaPresentacion.exe
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\bin\Debug\CapaPresentacion.pdb
@@ -175,6 +176,7 @@ C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsFor
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\bin\Debug\zh-Hans\Microsoft.Data.SqlClient.resources.dll
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\bin\Debug\zh-Hant\Microsoft.Data.SqlClient.resources.dll
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPresentacion.csproj.AssemblyReference.cache
+C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPresentacion.Frm_Home.resources
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPresentacion.Frm_Login.resources
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPresentacion.Properties.Resources.resources
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPresentacion.csproj.GenerateResource.cache
@@ -182,4 +184,3 @@ C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsFor
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPres.61CA7C38.Up2Date
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPresentacion.exe
 C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\obj\Debug\CapaPresentacion.pdb
-C:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\bin\Debug\assets\adcivet_logo.png

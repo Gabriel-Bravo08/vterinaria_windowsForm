@@ -60,6 +60,7 @@ namespace CapaEntidad
         }
 
         public string NombreEstado { get; set; }
+        public string NombreCompleto => $"{_nombre} {_apellido}";
 
         public DateTime FechaCreacion
         {

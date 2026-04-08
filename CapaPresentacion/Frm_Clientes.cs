@@ -1,9 +1,11 @@
 using CapaEntidad;
 using CapaLogicaNegocio;
+using CapaPresentacion.Modals;
+using CapaPresentacion.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Drawing;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -12,10 +14,9 @@ namespace CapaPresentacion
     public partial class Frm_Clientes : Form
     {
         private readonly CN_Clientes _negocio = new CN_Clientes();
-        private BindingSource _bindingSource = new BindingSource();
         private List<Cls_Clientes> _listaOriginal = new List<Cls_Clientes>();
+        private BindingSource _bindingSource = new BindingSource();
         private readonly Cls_Personal _usuarioActual;
-        private int _clienteIdSeleccionado = 0;
 
         public Frm_Clientes(Cls_Personal usuario)
         {
@@ -26,34 +27,51 @@ namespace CapaPresentacion
         private void Frm_Clientes_Load(object sender, EventArgs e)
         {
             ConfigurarGrid();
-            CargarEstados();
             ListarClientes();
+            VisualStyle.ApplyGridStyle(dgvData);
         }
 
         private void ConfigurarGrid()
         {
+            dgvData.RowTemplate.Height = 35;
+            dgvData.GridColor = System.Drawing.Color.FromArgb(235, 239, 242);
             dgvData.AutoGenerateColumns = false;
             dgvData.Columns.Clear();
-            
+
+            var btnEditar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "📝",
+                Name = "btnEditar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEditar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEditar);
+
+            var btnEliminar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "🗑️",
+                Name = "btnEliminar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEliminar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEliminar);
+
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ClienteId", Name = "clienteId", HeaderText = "ID", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Nombre", Name = "nombre", HeaderText = "Nombre", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Apellido", Name = "apellido", HeaderText = "Apellido", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Telefono", Name = "telefono", HeaderText = "Teléfono" });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Email", Name = "email", HeaderText = "Email" });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Direccion", Name = "direccion", HeaderText = "Dirección" });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "EstadoId", Name = "estadoId", HeaderText = "EstadoId", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado" });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreCompleto", Name = "nombreCompleto", HeaderText = "Nombre Completo", Width = 200 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Telefono", Name = "telefono", HeaderText = "Teléfono", Width = 120 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Email", Name = "email", HeaderText = "Email", Width = 150 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Direccion", Name = "direccion", HeaderText = "Dirección", Width = 200 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
 
             dgvData.DataSource = _bindingSource;
-        }
-
-        private void CargarEstados()
-        {
-            cboEstado.Items.Add(new { Valor = 1, Texto = "Activo" });
-            cboEstado.Items.Add(new { Valor = 2, Texto = "Inactivo" });
-            cboEstado.DisplayMember = "Texto";
-            cboEstado.ValueMember = "Valor";
-            cboEstado.SelectedIndex = 0;
         }
 
         private void ListarClientes()
@@ -62,97 +80,58 @@ namespace CapaPresentacion
             _bindingSource.DataSource = new BindingList<Cls_Clientes>(_listaOriginal);
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private void btnNuevo_Click(object sender, EventArgs e)
         {
-            string mensaje = string.Empty;
-            Cls_Clientes obj = new Cls_Clientes()
+            using (var modal = new Frm_Clientes_Modal())
             {
-                ClienteId = _clienteIdSeleccionado,
-                Nombre = txtNombre.Text.Trim(),
-                Apellido = txtApellido.Text.Trim(),
-                Telefono = txtTelefono.Text.Trim(),
-                Email = txtEmail.Text.Trim(),
-                Direccion = txtDireccion.Text.Trim(),
-                EstadoId = (int)((dynamic)cboEstado.SelectedItem).Valor
-            };
-
-            int rolId = _usuarioActual.RolId;
-
-            if (obj.ClienteId == 0) // Nuevo
-            {
-                int idGenerado;
-                mensaje = _negocio.Registrar(obj, rolId, out idGenerado);
-                if (idGenerado > 0 || mensaje.Contains("exitosamente"))
+                if (modal.ShowDialog() == DialogResult.OK)
                 {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarClientes();
-                    LimpiarFormulario();
+                    string mensaje;
+                    int idGenerado;
+                    mensaje = _negocio.Registrar(modal.ObjetoResultado, _usuarioActual.RolId, out idGenerado);
+                    if (mensaje.Contains("correctamente") || idGenerado > 0)
+                    {
+                        MessageBox.Show("Cliente guardado exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarClientes();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else // Editar
-            {
-                bool resultado = _negocio.Editar(obj, rolId, out mensaje);
-                if (resultado)
-                {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarClientes();
-                    LimpiarFormulario();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnEliminar_Click(object sender, EventArgs e)
-        {
-            if (_clienteIdSeleccionado == 0) return;
-            if (MessageBox.Show("¿Seguro de desactivar?", "Confirmación", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                string mensaje;
-                if (_negocio.Eliminar(_clienteIdSeleccionado, _usuarioActual.RolId, out mensaje))
-                {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarClientes();
-                    LimpiarFormulario();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnLimpiar_Click(object sender, EventArgs e) => LimpiarFormulario();
-
-        private void LimpiarFormulario()
-        {
-            _clienteIdSeleccionado = 0;
-            txtNombre.Clear();
-            txtApellido.Clear();
-            txtTelefono.Clear();
-            txtEmail.Clear();
-            txtDireccion.Clear();
-            cboEstado.SelectedIndex = 0;
-            txtNombre.Focus();
         }
 
         private void dgvData_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvData.CurrentRow != null)
-            {
-                var cli = (Cls_Clientes)dgvData.CurrentRow.DataBoundItem;
-                _clienteIdSeleccionado = cli.ClienteId;
-                txtNombre.Text = cli.Nombre;
-                txtApellido.Text = cli.Apellido;
-                txtTelefono.Text = cli.Telefono;
-                txtEmail.Text = cli.Email;
-                txtDireccion.Text = cli.Direccion;
+            if (e.RowIndex < 0) return;
 
-                int estadoId = cli.EstadoId;
-                for (int i = 0; i < cboEstado.Items.Count; i++)
+            if (dgvData.Columns[e.ColumnIndex].Name == "btnEditar")
+            {
+                var c = (Cls_Clientes)dgvData.CurrentRow.DataBoundItem;
+                using (var modal = new Frm_Clientes_Modal(c))
                 {
-                    if ((int)((dynamic)cboEstado.Items[i]).Valor == estadoId)
+                    if (modal.ShowDialog() == DialogResult.OK)
                     {
-                        cboEstado.SelectedIndex = i;
-                        break;
+                        string mensaje;
+                        if (_negocio.Editar(modal.ObjetoResultado, _usuarioActual.RolId, out mensaje))
+                        {
+                            MessageBox.Show("Cliente actualizado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            ListarClientes();
+                        }
+                        else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+            }
+            else if (dgvData.Columns[e.ColumnIndex].Name == "btnEliminar")
+            {
+                var c = (Cls_Clientes)dgvData.CurrentRow.DataBoundItem;
+                if (MessageBox.Show($"¿Desea eliminar al cliente '{c.NombreCompleto}'?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    string mensaje;
+                    if (_negocio.Eliminar(c.ClienteId, _usuarioActual.RolId, out mensaje))
+                    {
+                        MessageBox.Show("Cliente eliminado correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarClientes();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -166,10 +145,9 @@ namespace CapaPresentacion
             }
             else
             {
-                var filtrada = _listaOriginal.Where(x => 
+                var filtrada = _listaOriginal.Where(x =>
                     (x.Nombre != null && x.Nombre.ToLower().Contains(busqueda)) ||
                     (x.Apellido != null && x.Apellido.ToLower().Contains(busqueda)) ||
-                    (x.Telefono != null && x.Telefono.ToLower().Contains(busqueda)) ||
                     (x.Email != null && x.Email.ToLower().Contains(busqueda))
                 ).ToList();
                 _bindingSource.DataSource = new BindingList<Cls_Clientes>(filtrada);

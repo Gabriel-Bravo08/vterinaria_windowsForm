@@ -57,9 +57,11 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@precio", obj.Precio);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
 
-                        // Si el USP devuelve el ID generado por output, capturarlo.
-                        // Asumiendo que el USP tiene ese parámetro, de lo contrario esto fallará o se ignorará.
+                        SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                        cmd.Parameters.Add(idOut);
+
                         cmd.ExecuteNonQuery();
+                        idGenerado = (int)idOut.Value;
                         mensaje = "Servicio creado correctamente.";
                     }
                 }

@@ -1,8 +1,11 @@
 using CapaEntidad;
 using CapaLogicaNegocio;
+using CapaPresentacion.Modals;
+using CapaPresentacion.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -11,10 +14,9 @@ namespace CapaPresentacion
     public partial class Frm_Especies : Form
     {
         private readonly CN_Especies _negocio = new CN_Especies();
-        private BindingSource _bindingSource = new BindingSource();
         private List<Cls_Especies> _listaOriginal = new List<Cls_Especies>();
+        private BindingSource _bindingSource = new BindingSource();
         private readonly Cls_Personal _usuarioActual;
-        private int _especieIdSeleccionada = 0;
 
         public Frm_Especies(Cls_Personal usuario)
         {
@@ -25,118 +27,108 @@ namespace CapaPresentacion
         private void Frm_Especies_Load(object sender, EventArgs e)
         {
             ConfigurarGrid();
-            CargarEstados();
-            Listar();
+            ListarEspecies();
+            VisualStyle.ApplyGridStyle(dgvData);
         }
 
         private void ConfigurarGrid()
         {
+            dgvData.RowTemplate.Height = 35;
+            dgvData.GridColor = System.Drawing.Color.FromArgb(235, 239, 242);
             dgvData.AutoGenerateColumns = false;
             dgvData.Columns.Clear();
+
+            var btnEditar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "📝",
+                Name = "btnEditar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEditar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEditar);
+
+            var btnEliminar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "🗑️",
+                Name = "btnEliminar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEliminar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEliminar);
+
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "EspecieId", Name = "especieId", HeaderText = "ID", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEspecie", Name = "nombreEspecie", HeaderText = "Especie", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "EstadoId", Name = "estadoId", HeaderText = "EstadoId", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado" });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEspecie", Name = "nombreEspecie", HeaderText = "Especie", Width = 250 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
 
             dgvData.DataSource = _bindingSource;
         }
 
-        private void CargarEstados()
-        {
-            cboEstado.Items.Add(new { Valor = 1, Texto = "Activo" });
-            cboEstado.Items.Add(new { Valor = 2, Texto = "Inactivo" });
-            cboEstado.DisplayMember = "Texto";
-            cboEstado.ValueMember = "Valor";
-            cboEstado.SelectedIndex = 0;
-        }
-
-        private void Listar()
+        private void ListarEspecies()
         {
             _listaOriginal = _negocio.Listar();
             _bindingSource.DataSource = new BindingList<Cls_Especies>(_listaOriginal);
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private void btnNuevo_Click(object sender, EventArgs e)
         {
-            string mensaje = string.Empty;
-            Cls_Especies obj = new Cls_Especies()
+            using (var modal = new Frm_Especies_Modal())
             {
-                EspecieId = _especieIdSeleccionada,
-                NombreEspecie = txtNombre.Text.Trim(),
-                EstadoId = (int)((dynamic)cboEstado.SelectedItem).Valor
-            };
-
-            int rolId = _usuarioActual.RolId;
-
-            if (obj.EspecieId == 0)
-            {
-                int idResultado;
-                mensaje = _negocio.Registrar(obj, rolId, out idResultado);
-                if (idResultado > 0 || mensaje.Contains("correctamente"))
+                if (modal.ShowDialog() == DialogResult.OK)
                 {
-                    MessageBox.Show("Especie registrada correctamente.", "Sistema", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Limpiar();
-                    Listar();
+                    string mensaje;
+                    int idGenerado;
+                    mensaje = _negocio.Registrar(modal.ObjetoResultado, _usuarioActual.RolId, out idGenerado);
+                    if (mensaje.Contains("correctamente") || idGenerado > 0)
+                    {
+                        MessageBox.Show("Especie guardada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarEspecies();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else
-            {
-                bool resultado = _negocio.Editar(obj, rolId, out mensaje);
-                if (resultado)
-                {
-                    MessageBox.Show("Especie actualizada correctamente.", "Sistema", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Limpiar();
-                    Listar();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnEliminar_Click(object sender, EventArgs e)
-        {
-            if (_especieIdSeleccionada == 0) return;
-
-            if (MessageBox.Show("¿Está seguro de eliminar esta especie?", "Confirmar", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
-            {
-                string mensaje;
-                int rolId = _usuarioActual.RolId;
-                bool resultado = _negocio.Eliminar(_especieIdSeleccionada, rolId, out mensaje);
-
-                if (resultado)
-                {
-                    MessageBox.Show("Especie eliminada correctamente.", "Sistema", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    Limpiar();
-                    Listar();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void Limpiar()
-        {
-            _especieIdSeleccionada = 0;
-            txtNombre.Text = "";
-            cboEstado.SelectedIndex = 0;
-            txtNombre.Focus();
         }
 
         private void dgvData_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvData.CurrentRow != null)
+            if (e.RowIndex < 0) return;
+
+            if (dgvData.Columns[e.ColumnIndex].Name == "btnEditar")
             {
                 var esp = (Cls_Especies)dgvData.CurrentRow.DataBoundItem;
-                _especieIdSeleccionada = esp.EspecieId;
-                txtNombre.Text = esp.NombreEspecie;
-
-                int idEstado = esp.EstadoId;
-                for (int i = 0; i < cboEstado.Items.Count; i++)
+                using (var modal = new Frm_Especies_Modal(esp))
                 {
-                    if ((int)((dynamic)cboEstado.Items[i]).Valor == idEstado)
+                    if (modal.ShowDialog() == DialogResult.OK)
                     {
-                        cboEstado.SelectedIndex = i;
-                        break;
+                        string mensaje;
+                        if (_negocio.Editar(modal.ObjetoResultado, _usuarioActual.RolId, out mensaje))
+                        {
+                            MessageBox.Show("Especie actualizada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            ListarEspecies();
+                        }
+                        else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+            }
+            else if (dgvData.Columns[e.ColumnIndex].Name == "btnEliminar")
+            {
+                var esp = (Cls_Especies)dgvData.CurrentRow.DataBoundItem;
+                if (MessageBox.Show($"¿Desea eliminar la especie '{esp.NombreEspecie}'?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    string mensaje;
+                    if (_negocio.Eliminar(esp.EspecieId, _usuarioActual.RolId, out mensaje))
+                    {
+                        MessageBox.Show("Especie eliminada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarEspecies();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -150,13 +142,11 @@ namespace CapaPresentacion
             }
             else
             {
-                var filtrada = _listaOriginal.Where(x => 
+                var filtrada = _listaOriginal.Where(x =>
                     (x.NombreEspecie != null && x.NombreEspecie.ToLower().Contains(busqueda))
                 ).ToList();
                 _bindingSource.DataSource = new BindingList<Cls_Especies>(filtrada);
             }
         }
-
-        private void btnLimpiar_Click(object sender, EventArgs e) => Limpiar();
     }
 }

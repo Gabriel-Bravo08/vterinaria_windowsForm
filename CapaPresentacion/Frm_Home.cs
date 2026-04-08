@@ -1,282 +1,236 @@
+using CapaEntidad;
+using CapaLogicaNegocio;
+using CapaPresentacion.Utils;
 using System;
 using System.Collections.Generic;
-using System.Windows.Forms;
-using CapaLogicaNegocio;
-using CapaEntidad;
 using System.Drawing;
 using System.IO;
+using System.Linq;
+using System.Windows.Forms;
 
 namespace CapaPresentacion
 {
     public partial class Frm_Home : Form
     {
-        private readonly Cls_Personal _usuarioActual;
-        private readonly CN_Menu _negocioMenu = new CN_Menu();
-        private bool _sidebarExpand = true;
+        private static Cls_Personal usuarioActual;
+        private static Form formularioActivo = null;
 
-
-        public Frm_Home(Cls_Personal usuario)
+        public Frm_Home(Cls_Personal objUsuario)
         {
+            usuarioActual = objUsuario;
             InitializeComponent();
-            _usuarioActual = usuario;
-            tslUsuarioLabel.Text = $"Conectado como: {_usuarioActual.NombreUsuario} ({_usuarioActual.NombreRol})";
-            lblUserName.Text = _usuarioActual.NombreUsuario;
-            lblUserRole.Text = _usuarioActual.NombreRol;
-            CargarLogo();
+            ConfigurarDisenoPremium();
         }
-
-
-        private void CargarLogo()
-        {
-            try
-            {
-                string pathLogo = Path.Combine(Application.StartupPath, "assets", "adcivet_logo.png");
-                if (File.Exists(pathLogo))
-                {
-                    picLogo.Image = Image.FromFile(pathLogo);
-                    picSidebarLogo.Image = picLogo.Image;
-                }
-            }
-            catch { /* Silencioso si falla la carga del logo */ }
-        }
-
 
         private void Frm_Home_Load(object sender, EventArgs e)
         {
-            CargarMenuDinamico();
+            lblUserName.Text = usuarioActual.NombreUsuario;
+            lblUserRole.Text = usuarioActual.NombreRol;
+            tslUsuarioLabel.Text = $"Usuario: {usuarioActual.NombreUsuario}";
+            
+            CargarFondo();
+            ConfigurarMenu();
         }
 
-        private void CargarMenuDinamico() {
-            try {
-                flpMenu.Controls.Clear();
-                List<Cls_Menus> menus = _negocioMenu.ObtenerMenusPorRol(_usuarioActual.RolId);
-
-                if (menus == null || menus.Count == 0) {
-                    MessageBox.Show($"No se encontraron menús asignados para su rol.", 
-                                    "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                foreach (var menu in menus) {
-                    // Si el nombre coincide con categorías, añadimos botones secundarios o solo el principal
-                    CrearSeccionMenu(menu);
-                }
-            } catch (Exception ex) {
-                MessageBox.Show($"Error al cargar el menú: {ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void CrearSeccionMenu(Cls_Menus menu)
+        private void CargarFondo()
         {
-            // Título de la sección (opcional, como "OPERACIONES" en el diseño)
-            Label lblSeccion = new Label();
-            lblSeccion.Text = menu.Nombre.ToUpper();
-            lblSeccion.ForeColor = Color.FromArgb(150, 255, 255, 255);
-            lblSeccion.Font = new Font("Segoe UI", 8, FontStyle.Bold);
-            lblSeccion.Margin = new Padding(15, 15, 0, 5);
-            lblSeccion.AutoSize = true;
-            flpMenu.Controls.Add(lblSeccion);
-
-            // Submenús específicos
-            switch (menu.Nombre)
+            try
             {
-                case "Seguridades":
-                    flpMenu.Controls.Add(CrearBotonMenu("Personal", (s, e) => AbrirModulo("Personal")));
-                    flpMenu.Controls.Add(CrearBotonMenu("Roles", (s, e) => AbrirModulo("Roles")));
-                    break;
-                case "Catálogos":
-                    flpMenu.Controls.Add(CrearBotonMenu("Especies", (s, e) => AbrirModulo("Especies")));
-                    flpMenu.Controls.Add(CrearBotonMenu("Razas", (s, e) => AbrirModulo("Razas")));
-                    flpMenu.Controls.Add(CrearBotonMenu("Servicios", (s, e) => AbrirModulo("Servicios")));
-                    flpMenu.Controls.Add(CrearBotonMenu("Especialidades", (s, e) => AbrirModulo("Especialidades")));
-                    break;
-                case "Gestión Veterinaria":
-                    flpMenu.Controls.Add(CrearBotonMenu("Clientes", (s, e) => AbrirModulo("Clientes")));
-                    flpMenu.Controls.Add(CrearBotonMenu("Mascotas", (s, e) => AbrirModulo("Mascotas")));
-                    break;
-                case "Citas y Consultas":
-                    flpMenu.Controls.Add(CrearBotonMenu("Ver Citas", (s, e) => AbrirModulo("Citas")));
-                    break;
-                case "Historial Médico":
-                    flpMenu.Controls.Add(CrearBotonMenu("Ver Historiales", (s, e) => AbrirModulo("Historial Médico")));
-                    break;
-                default:
-                    flpMenu.Controls.Add(CrearBotonMenu(menu.Nombre, (s, e) => AbrirModulo(menu.Nombre)));
-                    break;
-            }
-        }
+                string path = Path.Combine(Application.StartupPath, "assets", "adcivet_logo.png");
+                if (!File.Exists(path))
+                    path = @"c:\Users\creco\Documents\UDEM\I 2026\Programacion\PROYECTO\vterinaria_windowsForm\CapaPresentacion\assets\adcivet_logo.png";
 
-        private Button CrearBotonMenu(string texto, EventHandler onClick)
-        {
-            Button btn = new Button();
-            btn.Text = "    " + GetMenuIcon(texto) + "    " + texto;
-            btn.Tag = texto; // Guardar texto original
-            btn.TextAlign = ContentAlignment.MiddleLeft;
-            btn.Size = new Size(240, 45);
-            btn.FlatStyle = FlatStyle.Flat;
-            btn.FlatAppearance.BorderSize = 0;
-            btn.FlatAppearance.MouseDownBackColor = Color.FromArgb(28, 64, 107);
-            btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(38, 74, 117);
-            btn.ForeColor = Color.White;
-            btn.Font = new Font("Segoe UI", 10, FontStyle.Regular);
-            btn.Cursor = Cursors.Hand;
-            btn.Margin = new Padding(0, 2, 0, 2);
-            btn.Click += (s, e) => {
-                ResetButtonStyles();
-                btn.BackColor = Color.FromArgb(100, 181, 246);
-                btn.ForeColor = Color.FromArgb(13, 40, 71);
-                btn.Font = new Font(btn.Font, FontStyle.Bold);
-                onClick(s, e);
-            };
-            return btn;
-        }
-
-        private string GetMenuIcon(string texto)
-        {
-            switch (texto)
-            {
-                case "Personal": return "👤";
-                case "Roles": return "🔑";
-                case "Especies": return "🐾";
-                case "Razas": return "🏷️";
-                case "Servicios": return "🩺";
-                case "Especialidades": return "🎓";
-                case "Clientes": return "👥";
-                case "Mascotas": return "🐕";
-                case "Ver Citas": return "📅";
-                case "Ver Historiales": return "📋";
-                default: return "🔹";
-            }
-        }
-
-
-        private void ResetButtonStyles()
-        {
-            foreach (Control ctrl in flpMenu.Controls)
-            {
-                if (ctrl is Button btn)
+                if (File.Exists(path))
                 {
-                    btn.BackColor = Color.Transparent;
-                    btn.ForeColor = Color.White;
-                    btn.Font = new Font(btn.Font, FontStyle.Regular);
+                    picLogo.Image = Image.FromFile(path);
+                    picLogo.SizeMode = PictureBoxSizeMode.Zoom;
+                    picLogo.BackColor = Color.FromArgb(248, 250, 252);
                 }
             }
+            catch { }
         }
 
-
-        private void AbrirModulo(string nombreModulo)
+        private void ConfigurarDisenoPremium()
         {
-            Form formulario = null;
+            tlpMain.ColumnStyles[0].Width = 260;
+            lblAppName.Text = "ADCIVET";
+            pnlUserProfile.BackColor = Color.Transparent;
+        }
 
-            switch (nombreModulo)
+        private void ConfigurarMenu()
+        {
+            flpMenu.Controls.Clear();
+            
+            CN_Menu _negocioMenu = new CN_Menu();
+            List<Cls_Menus> menusPermitidos = _negocioMenu.ObtenerMenusPorRol(usuarioActual.RolId);
+
+            // 1. Sección Principal
+            AgregarSeccionMenu("PRINCIPAL");
+            if (menusPermitidos.Any(m => m.Nombre == "Dashboard"))
+                AgregarBotonMenu("Dashboard", "🏠", (s, e) => AbrirModulo("Dashboard", null));
+
+            // 2. Sección Gestión
+            bool mostrarGestion = menusPermitidos.Any(m => new[] { "Clientes", "Mascotas", "Citas", "Historial" }.Contains(m.Nombre));
+            if (mostrarGestion)
             {
-                case "Clientes":
-                    formulario = new Frm_Clientes(_usuarioActual);
-                    break;
-                case "Mascotas":
-                    formulario = new Frm_Mascotas(_usuarioActual);
-                    break;
-                case "Personal":
-                    formulario = new Frm_Personal(_usuarioActual);
-                    break;
-                case "Citas":
-                    formulario = new Frm_Citas(_usuarioActual);
-                    break;
-                case "Historial Médico":
-                    formulario = new Frm_HistorialMedico(_usuarioActual);
-                    break;
-                case "Servicios":
-                    formulario = new Frm_Servicios(_usuarioActual);
-                    break;
-                case "Especies":
-                    formulario = new Frm_Especies(_usuarioActual);
-                    break;
-                case "Razas":
-                    formulario = new Frm_Razas(_usuarioActual);
-                    break;
-                case "Especialidades":
-                    formulario = new Frm_Especialidades(_usuarioActual);
-                    break;
-                case "Roles":
-                    formulario = new Frm_Roles(_usuarioActual);
-                    break;
-                default:
-                    MessageBox.Show($"El módulo {nombreModulo} aún no ha sido implementado.", "Aviso", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    return;
-            }
-
-            if (formulario != null)
-            {
-                if (pnlContainer.Controls.Count > 0)
-                    pnlContainer.Controls.Clear();
-
-                formulario.TopLevel = false;
-                formulario.FormBorderStyle = FormBorderStyle.None;
-                formulario.Dock = DockStyle.Fill;
-                pnlContainer.Controls.Add(formulario);
-                lblModuleTitle.Text = nombreModulo;
+                AgregarSeccionMenu("GESTIÓN");
+                if (menusPermitidos.Any(m => m.Nombre == "Clientes"))
+                    AgregarBotonMenu("Clientes", "👥", (s, e) => AbrirModulo("Clientes", new Frm_Clientes(usuarioActual)));
                 
-                // Intentar ocultar el header interno del formulario cargado
-                foreach (Control c in formulario.Controls) {
-                    if (c.Name == "pnlHeader") c.Visible = false;
-                }
+                if (menusPermitidos.Any(m => m.Nombre == "Mascotas"))
+                    AgregarBotonMenu("Mascotas", "🐾", (s, e) => AbrirModulo("Mascotas", new Frm_Mascotas(usuarioActual)));
+                
+                if (menusPermitidos.Any(m => m.Nombre == "Citas"))
+                    AgregarBotonMenu("Citas", "📅", (s, e) => AbrirModulo("Citas", new Frm_Citas(usuarioActual)));
+                
+                if (menusPermitidos.Any(m => m.Nombre == "Historial"))
+                    AgregarBotonMenu("Historial", "📜", (s, e) => AbrirModulo("Historial Médico", new Frm_HistorialMedico(usuarioActual)));
+            }
 
-                formulario.Show();
+            // 3. Sección Catálogos
+            bool mostrarCatalogos = menusPermitidos.Any(m => new[] { "Servicios", "Especies", "Razas", "Especialidades" }.Contains(m.Nombre));
+            if (mostrarCatalogos)
+            {
+                AgregarSeccionMenu("CATÁLOGOS");
+                if (menusPermitidos.Any(m => m.Nombre == "Servicios"))
+                    AgregarBotonMenu("Servicios", "🛠️", (s, e) => AbrirModulo("Servicios", new Frm_Servicios(usuarioActual)));
+                
+                if (menusPermitidos.Any(m => m.Nombre == "Especies"))
+                    AgregarBotonMenu("Especies", "🧬", (s, e) => AbrirModulo("Especies", new Frm_Especies(usuarioActual)));
+                
+                if (menusPermitidos.Any(m => m.Nombre == "Razas"))
+                    AgregarBotonMenu("Razas", "🐕", (s, e) => AbrirModulo("Razas", new Frm_Razas(usuarioActual)));
+                
+                if (menusPermitidos.Any(m => m.Nombre == "Especialidades"))
+                    AgregarBotonMenu("Especialidades", "🎓", (s, e) => AbrirModulo("Especialidades", new Frm_Especialidades(usuarioActual)));
+            }
 
-
+            // 4. Sección Sistema
+            bool mostrarSistema = menusPermitidos.Any(m => new[] { "Personal", "Roles" }.Contains(m.Nombre));
+            if (mostrarSistema)
+            {
+                AgregarSeccionMenu("SISTEMA");
+                if (menusPermitidos.Any(m => m.Nombre == "Personal"))
+                    AgregarBotonMenu("Personal", "👨‍⚕️", (s, e) => AbrirModulo("Personal", new Frm_Personal(usuarioActual)));
+                
+                if (menusPermitidos.Any(m => m.Nombre == "Roles"))
+                    AgregarBotonMenu("Roles", "🛡️", (s, e) => AbrirModulo("Roles", new Frm_Roles(usuarioActual)));
             }
         }
 
-        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        private void AgregarSeccionMenu(string titulo)
         {
-            DialogResult result = MessageBox.Show("¿Está seguro que desea cerrar la sesión?", "Confirmación", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-            if (result == DialogResult.Yes)
+            Label lbl = new Label
             {
-                this.Tag = "logout";
-                this.Close();
+                Text = titulo,
+                ForeColor = Color.FromArgb(148, 163, 184),
+                Font = new Font("Segoe UI", 8, FontStyle.Bold),
+                Size = new Size(240, 30),
+                TextAlign = ContentAlignment.BottomLeft,
+                Padding = new Padding(15, 0, 0, 5)
+            };
+            flpMenu.Controls.Add(lbl);
+        }
+
+        private void AgregarBotonMenu(string texto, string icono, EventHandler clickEvent)
+        {
+            Button btn = new Button
+            {
+                Text = $"   {icono}   {texto}",
+                TextAlign = ContentAlignment.MiddleLeft,
+                TextImageRelation = TextImageRelation.ImageBeforeText,
+                FlatStyle = FlatStyle.Flat,
+                Height = 45,
+                Width = 240,
+                ForeColor = Color.White,
+                Font = new Font("Segoe UI", 10, FontStyle.Bold),
+                Padding = new Padding(15, 0, 0, 0),
+                Cursor = Cursors.Hand
+            };
+            btn.FlatAppearance.BorderSize = 0;
+            btn.FlatAppearance.MouseOverBackColor = Color.FromArgb(30, 58, 138);
+            if (clickEvent != null) btn.Click += clickEvent;
+            flpMenu.Controls.Add(btn);
+        }
+
+        private void AbrirModulo(string nombre, Form formulario)
+        {
+            if (formulario == null)
+            {
+                if (formularioActivo != null) formularioActivo.Close();
+                picLogo.Visible = true;
+                lblModuleTitle.Text = "Panel Principal";
+                btnGlobalAdd.Visible = false;
+                return;
+            }
+
+            if (formularioActivo != null) formularioActivo.Close();
+            formularioActivo = formulario;
+            picLogo.Visible = false;
+
+            formulario.TopLevel = false;
+            formulario.FormBorderStyle = FormBorderStyle.None;
+            formulario.Dock = DockStyle.Fill;
+            pnlContainer.Controls.Add(formulario);
+            formulario.BringToFront();
+            formulario.Show();
+            
+            lblModuleTitle.Text = nombre;
+            
+            // Búsqueda exhaustiva del botón de agregar
+            Button btnHijo = BuscarBotonRecursivo(formulario, "btnNuevo");
+            if (btnHijo != null)
+            {
+                // En lugar de Ocultar (que rompe el PerformClick en algunos casos),
+                // lo movemos fuera de la pantalla y le quitamos el tamaño.
+                btnHijo.Location = new Point(-1000, -1000);
+                btnHijo.Size = new Size(0, 0);
+                btnGlobalAdd.Visible = true;
+            }
+            else
+            {
+                btnGlobalAdd.Visible = false;
+            }
+        }
+
+        private Button BuscarBotonRecursivo(Control contenedor, string nombre)
+        {
+            foreach (Control c in contenedor.Controls)
+            {
+                if (c.Name == nombre && c is Button) return (Button)c;
+                Control encontrado = BuscarBotonRecursivo(c, nombre);
+                if (encontrado != null) return (Button)encontrado;
+            }
+            return null;
+        }
+
+        private void btnGlobalAdd_Click(object sender, EventArgs e)
+        {
+            if (formularioActivo == null) return;
+            
+            Button btnHijo = BuscarBotonRecursivo(formularioActivo, "btnNuevo");
+            if (btnHijo != null)
+            {
+                // Disparar click
+                btnHijo.PerformClick();
             }
         }
 
         private void btnToggleMenu_Click(object sender, EventArgs e)
         {
-            sidebarTimer.Start();
-        }
-
-        private void sidebarTimer_Tick(object sender, EventArgs e)
-        {
-            if (_sidebarExpand)
-            {
-                pnlSidebar.Width -= 10;
-                if (pnlSidebar.Width <= 60)
-                {
-                    _sidebarExpand = false;
-                    sidebarTimer.Stop();
-                    lblAppName.Visible = false;
-                    flpMenu.Padding = new Padding(5, 20, 5, 0);
-                    foreach (Control ctrl in flpMenu.Controls)
-                    {
-                        if (ctrl is Button btn) btn.Text = "    " + GetMenuIcon(btn.Tag.ToString());
-                        if (ctrl is Label lbl) lbl.Visible = false;
-                    }
-                }
-            }
+            if (tlpMain.ColumnStyles[0].Width >= 260)
+                tlpMain.ColumnStyles[0].Width = 70;
             else
-            {
-                pnlSidebar.Width += 10;
-                if (pnlSidebar.Width >= 260)
-                {
-                    _sidebarExpand = true;
-                    sidebarTimer.Stop();
-                    lblAppName.Visible = true;
-                    flpMenu.Padding = new Padding(10, 20, 10, 0);
-                    foreach (Control ctrl in flpMenu.Controls)
-                    {
-                        if (ctrl is Button btn) btn.Text = "    " + GetMenuIcon(btn.Tag.ToString()) + "    " + btn.Tag.ToString();
-                        if (ctrl is Label lbl) lbl.Visible = true;
-                    }
-                }
-            }
+                tlpMain.ColumnStyles[0].Width = 260;
         }
 
+        private void cerrarSesionToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (MessageBox.Show("¿Desea cerrar la sesión?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+            {
+                this.Tag = "logout";
+                this.Close();
+            }
+        }
     }
 }

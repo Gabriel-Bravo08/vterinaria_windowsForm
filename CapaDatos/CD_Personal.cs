@@ -1,4 +1,4 @@
-﻿using CapaEntidad;
+using CapaEntidad;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -71,7 +71,12 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@clave", obj.Clave);
                         cmd.Parameters.AddWithValue("@rolId", obj.RolId);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
+                        
+                        SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                        cmd.Parameters.Add(idOut);
+
                         cmd.ExecuteNonQuery();
+                        idGenerado = (int)idOut.Value;
                         mensaje = "Personal creado correctamente.";
                     }
                 }

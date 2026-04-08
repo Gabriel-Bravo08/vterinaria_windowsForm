@@ -61,7 +61,12 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@fechaCita", obj.FechaCita);
                         cmd.Parameters.AddWithValue("@notas", obj.Notas ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
+                        
+                        SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                        cmd.Parameters.Add(idOut);
+
                         cmd.ExecuteNonQuery();
+                        idGenerado = (int)idOut.Value;
                         mensaje = "Cita creada correctamente.";
                     }
                 }

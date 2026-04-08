@@ -1,8 +1,11 @@
 using CapaEntidad;
 using CapaLogicaNegocio;
+using CapaPresentacion.Modals;
+using CapaPresentacion.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Data;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -11,12 +14,9 @@ namespace CapaPresentacion
     public partial class Frm_Mascotas : Form
     {
         private readonly CN_Mascotas _negocio = new CN_Mascotas();
-        private readonly CN_Clientes _negocioClientes = new CN_Clientes();
-        private readonly CN_Catalogos _negocioCatalogos = new CN_Catalogos();
-        private BindingSource _bindingSource = new BindingSource();
         private List<Cls_Mascotas> _listaOriginal = new List<Cls_Mascotas>();
+        private BindingSource _bindingSource = new BindingSource();
         private readonly Cls_Personal _usuarioActual;
-        private int _mascotaIdSeleccionado = 0;
 
         public Frm_Mascotas(Cls_Personal usuario)
         {
@@ -27,44 +27,52 @@ namespace CapaPresentacion
         private void Frm_Mascotas_Load(object sender, EventArgs e)
         {
             ConfigurarGrid();
-            CargarCombos();
             ListarMascotas();
+            VisualStyle.ApplyGridStyle(dgvData);
         }
 
         private void ConfigurarGrid()
         {
+            dgvData.RowTemplate.Height = 35;
+            dgvData.GridColor = System.Drawing.Color.FromArgb(235, 239, 242);
             dgvData.AutoGenerateColumns = false;
             dgvData.Columns.Clear();
+
+            var btnEditar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "📝",
+                Name = "btnEditar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEditar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEditar);
+
+            var btnEliminar = new DataGridViewButtonColumn
+            {
+                HeaderText = "",
+                Text = "🗑️",
+                Name = "btnEliminar",
+                UseColumnTextForButtonValue = true,
+                Width = 35,
+                AutoSizeMode = DataGridViewAutoSizeColumnMode.None,
+                FlatStyle = FlatStyle.Flat
+            };
+            btnEliminar.DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleCenter;
+            dgvData.Columns.Add(btnEliminar);
+
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "MascotaId", Name = "mascotaId", HeaderText = "ID", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreMascota", Name = "nombreMascota", HeaderText = "Nombre", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "ClienteId", Name = "clienteId", HeaderText = "ClienteId", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreCliente", Name = "nombreCliente", HeaderText = "Dueño" });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "EspecieId", Name = "especieId", HeaderText = "EspecieId", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEspecie", Name = "nombreEspecie", HeaderText = "Especie" });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "FechaNacimiento", Name = "fechaNacimiento", HeaderText = "F. Nac." });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Peso", Name = "peso", HeaderText = "Peso (kg)" });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Color", Name = "color", HeaderText = "Color" });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "EstadoId", Name = "estadoId", HeaderText = "EstadoId", Visible = false });
-            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado" });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreMascota", Name = "nombreMascota", HeaderText = "Mascota", Width = 150 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreCliente", Name = "nombreCliente", HeaderText = "Dueño", Width = 180 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEspecie", Name = "nombreEspecie", HeaderText = "Especie", Width = 120 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Color", Name = "color", HeaderText = "Color", Width = 100 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Peso", Name = "peso", HeaderText = "Peso", Width = 80 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEstado", Name = "nombreEstado", HeaderText = "Estado", AutoSizeMode = DataGridViewAutoSizeColumnMode.Fill });
 
             dgvData.DataSource = _bindingSource;
-        }
-
-        private void CargarCombos()
-        {
-            cboCliente.DataSource = _negocioClientes.Listar();
-            cboCliente.DisplayMember = "Nombre";
-            cboCliente.ValueMember = "ClienteId";
-
-            cboEspecie.DataSource = _negocioCatalogos.ListarEspecies();
-            cboEspecie.DisplayMember = "NombreEspecie";
-            cboEspecie.ValueMember = "EspecieId";
-
-            cboEstado.Items.Add(new { Valor = 1, Texto = "Activo" });
-            cboEstado.Items.Add(new { Valor = 2, Texto = "Inactivo" });
-            cboEstado.DisplayMember = "Texto";
-            cboEstado.ValueMember = "Valor";
-            cboEstado.SelectedIndex = 0;
         }
 
         private void ListarMascotas()
@@ -73,104 +81,58 @@ namespace CapaPresentacion
             _bindingSource.DataSource = new BindingList<Cls_Mascotas>(_listaOriginal);
         }
 
-        private void btnGuardar_Click(object sender, EventArgs e)
+        private void btnNuevo_Click(object sender, EventArgs e)
         {
-            string mensaje;
-            Cls_Mascotas obj = new Cls_Mascotas()
+            using (var modal = new Frm_Mascotas_Modal())
             {
-                MascotaId = _mascotaIdSeleccionado,
-                NombreMascota = txtNombreMascota.Text.Trim(),
-                ClienteId = (int)cboCliente.SelectedValue,
-                EspecieId = (int)cboEspecie.SelectedValue,
-                FechaNacimiento = dtpFechaNac.Value,
-                Peso = numPeso.Value,
-                Color = txtColor.Text.Trim(),
-                EstadoId = (int)((dynamic)cboEstado.SelectedItem).Valor
-            };
-
-            int rolId = _usuarioActual.RolId;
-
-            if (obj.MascotaId == 0)
-            {
-                int idGenerado;
-                mensaje = _negocio.Registrar(obj, rolId, out idGenerado);
-                if (mensaje.Contains("correctamente") || idGenerado > 0)
+                if (modal.ShowDialog() == DialogResult.OK)
                 {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarMascotas();
-                    LimpiarFormulario();
+                    string mensaje;
+                    int idGenerado;
+                    mensaje = _negocio.Registrar(modal.ObjetoResultado, _usuarioActual.RolId, out idGenerado);
+                    if (mensaje.Contains("correctamente") || idGenerado > 0)
+                    {
+                        MessageBox.Show("Mascota guardada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarMascotas();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            else
-            {
-                bool resultado = _negocio.Editar(obj, rolId, out mensaje);
-                if (resultado)
-                {
-                    MessageBox.Show(mensaje, "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarMascotas();
-                    LimpiarFormulario();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void btnEliminar_Click(object sender, EventArgs e)
-        {
-            if (_mascotaIdSeleccionado == 0) return;
-            if (MessageBox.Show("¿Seguro de desactivar?", "Confirme", MessageBoxButtons.YesNo) == DialogResult.Yes)
-            {
-                string mensaje;
-                if (_negocio.Eliminar(_mascotaIdSeleccionado, _usuarioActual.RolId, out mensaje))
-                {
-                    MessageBox.Show("Mascota desactivada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                    ListarMascotas();
-                    LimpiarFormulario();
-                }
-                else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
-
-        private void LimpiarFormulario()
-        {
-            _mascotaIdSeleccionado = 0;
-            txtNombreMascota.Clear();
-            txtColor.Clear();
-            numPeso.Value = 0;
-            dtpFechaNac.Value = DateTime.Now;
-            cboEstado.SelectedIndex = 0;
-            txtNombreMascota.Focus();
         }
 
         private void dgvData_CellClick(object sender, DataGridViewCellEventArgs e)
         {
-            if (dgvData.CurrentRow != null)
+            if (e.RowIndex < 0) return;
+
+            if (dgvData.Columns[e.ColumnIndex].Name == "btnEditar")
             {
                 var m = (Cls_Mascotas)dgvData.CurrentRow.DataBoundItem;
-                _mascotaIdSeleccionado = m.MascotaId;
-                txtNombreMascota.Text = m.NombreMascota;
-                cboCliente.SelectedValue = m.ClienteId;
-                cboEspecie.SelectedValue = m.EspecieId;
-                txtColor.Text = m.Color;
-                numPeso.Value = m.Peso ?? 0;
-                if (m.FechaNacimiento.HasValue)
+                using (var modal = new Frm_Mascotas_Modal(m))
                 {
-                    dtpFechaNac.Value = m.FechaNacimiento.Value;
-                    dtpFechaNac.Checked = true;
-                }
-                else
-                {
-                    dtpFechaNac.Checked = false;
-                }
-
-                int estadoId = m.EstadoId;
-                for (int i = 0; i < cboEstado.Items.Count; i++)
-                {
-                    if ((int)((dynamic)cboEstado.Items[i]).Valor == estadoId)
+                    if (modal.ShowDialog() == DialogResult.OK)
                     {
-                        cboEstado.SelectedIndex = i;
-                        break;
+                        string mensaje;
+                        if (_negocio.Editar(modal.ObjetoResultado, _usuarioActual.RolId, out mensaje))
+                        {
+                            MessageBox.Show("Mascota actualizada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                            ListarMascotas();
+                        }
+                        else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
+                }
+            }
+            else if (dgvData.Columns[e.ColumnIndex].Name == "btnEliminar")
+            {
+                var m = (Cls_Mascotas)dgvData.CurrentRow.DataBoundItem;
+                if (MessageBox.Show($"¿Desea eliminar a '{m.NombreMascota}'?", "Confirmar", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+                {
+                    string mensaje;
+                    if (_negocio.Eliminar(m.MascotaId, _usuarioActual.RolId, out mensaje))
+                    {
+                        MessageBox.Show("Mascota eliminada correctamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                        ListarMascotas();
+                    }
+                    else MessageBox.Show(mensaje, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
         }
@@ -184,16 +146,13 @@ namespace CapaPresentacion
             }
             else
             {
-                var filtrada = _listaOriginal.Where(x => 
+                var filtrada = _listaOriginal.Where(x =>
                     (x.NombreMascota != null && x.NombreMascota.ToLower().Contains(busqueda)) ||
                     (x.NombreCliente != null && x.NombreCliente.ToLower().Contains(busqueda)) ||
-                    (x.NombreEspecie != null && x.NombreEspecie.ToLower().Contains(busqueda)) ||
-                    (x.Color != null && x.Color.ToLower().Contains(busqueda))
+                    (x.NombreEspecie != null && x.NombreEspecie.ToLower().Contains(busqueda))
                 ).ToList();
                 _bindingSource.DataSource = new BindingList<Cls_Mascotas>(filtrada);
             }
         }
-
-        private void btnLimpiar_Click(object sender, EventArgs e) => LimpiarFormulario();
     }
 }

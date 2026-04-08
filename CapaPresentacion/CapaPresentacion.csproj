@@ -219,8 +219,45 @@
     <Compile Include="Frm_Servicios.Designer.cs">
       <DependentUpon>Frm_Servicios.cs</DependentUpon>
     </Compile>
+    <Compile Include="Modals\BaseModal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Citas_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Clientes_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Especialidades_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Especies_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_HistorialMedico_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Mascotas_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Personal_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Razas_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Roles_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Modals\Frm_Servicios_Modal.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Utils\VisualStyle.cs" />
+    <EmbeddedResource Include="Frm_Home.resx">
+      <DependentUpon>Frm_Home.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Frm_Login.resx">
       <DependentUpon>Frm_Login.cs</DependentUpon>
     </EmbeddedResource>
