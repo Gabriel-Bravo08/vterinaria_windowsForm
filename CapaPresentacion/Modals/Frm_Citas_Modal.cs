@@ -1,7 +1,9 @@
 using CapaEntidad;
 using CapaLogicaNegocio;
 using System;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace CapaPresentacion.Modals
@@ -78,12 +80,20 @@ namespace CapaPresentacion.Modals
 
         private void CargarCombos()
         {
-            cboMascota.DataSource = _negocioMas.Listar();
+            var mascotas = _negocioMas.Listar();
+            cboMascota.DataSource = mascotas;
             cboMascota.DisplayMember = "NombreMascota";
             cboMascota.ValueMember = "MascotaId";
 
-            cboVeterinario.DataSource = _negocioPer.Listar().FindAll(x => x.NombreRol == "Veterinario");
-            cboVeterinario.DisplayMember = "NombreCompleto";
+            var veterinarios = _negocioPer.Listar().FindAll(x => x.NombreRol == "Veterinario");
+            // Formatear el nombre para incluir la especialidad si existe
+            var listaFormateada = veterinarios.Select(v => new {
+                v.PersonalId,
+                NombreConEsp = string.IsNullOrEmpty(v.NombreEspecialidad) ? v.NombreCompleto : $"{v.NombreCompleto} ({v.NombreEspecialidad})"
+            }).ToList();
+
+            cboVeterinario.DataSource = listaFormateada;
+            cboVeterinario.DisplayMember = "NombreConEsp";
             cboVeterinario.ValueMember = "PersonalId";
         }
 

@@ -1,4 +1,4 @@
-﻿using CapaEntidad;
+using CapaEntidad;
 using CapaLogicaNegocio;
 using System;
 using System.Collections.Generic;
@@ -10,8 +10,8 @@ namespace CapaPresentacion.Modals
     public partial class Frm_Personal_Modal : BaseModal
     {
         private TextBox txtPrimerNombre, txtSegundoNombre, txtPrimerApellido, txtSegundoApellido, txtTelefono, txtEmail, txtUsuario, txtClave;
-        private ComboBox cboRol, cboEstado;
-        private Label lblPName, lblSName, lblPApellido, lblSApellido, lblTel, lblMail, lblUser, lblPass, lblRol, lblEst;
+        private ComboBox cboRol, cboEstado, cboEspecialidad;
+        private Label lblPName, lblSName, lblPApellido, lblSApellido, lblTel, lblMail, lblUser, lblPass, lblRol, lblEst, lblEsp;
 
         public Cls_Personal ObjetoResultado { get; set; }
         private int _personalId = 0;
@@ -37,6 +37,7 @@ namespace CapaPresentacion.Modals
                 txtClave.Enabled = false; // Disable password edit in this simplified modal
                 SetComboValue(cboRol, obj.RolId);
                 SetComboValue(cboEstado, obj.EstadoId);
+                if (obj.EspecialidadId.HasValue) SetComboValue(cboEspecialidad, obj.EspecialidadId.Value);
             }
             else
             {
@@ -47,7 +48,7 @@ namespace CapaPresentacion.Modals
 
         private void InitializeComponentCustom()
         {
-            this.Size = new Size(550, 580);
+            this.Size = new Size(550, 640);
 
             int startX = 25;
             int startY = 20;
@@ -90,7 +91,11 @@ namespace CapaPresentacion.Modals
             lblEst = CreateLabel("Estado:", startX + colWidth + 20, startY + rowHeight * 4);
             cboEstado = CreateComboBox(startX + colWidth + 20, startY + rowHeight * 4 + 20, colWidth);
 
-            pnlContent.Controls.AddRange(new Control[] { lblPName, txtPrimerNombre, lblSName, txtSegundoNombre, lblPApellido, txtPrimerApellido, lblSApellido, txtSegundoApellido, lblTel, txtTelefono, lblMail, txtEmail, lblUser, txtUsuario, lblPass, txtClave, lblRol, cboRol, lblEst, cboEstado });
+            // Row 6
+            lblEsp = CreateLabel("Especialidad (Opcional):", startX, startY + rowHeight * 5);
+            cboEspecialidad = CreateComboBox(startX, startY + rowHeight * 5 + 20, colWidth);
+
+            pnlContent.Controls.AddRange(new Control[] { lblPName, txtPrimerNombre, lblSName, txtSegundoNombre, lblPApellido, txtPrimerApellido, lblSApellido, txtSegundoApellido, lblTel, txtTelefono, lblMail, txtEmail, lblUser, txtUsuario, lblPass, txtClave, lblRol, cboRol, lblEst, cboEstado, lblEsp, cboEspecialidad });
 
             btnAccept.Click += BtnAccept_Click;
         }
@@ -105,6 +110,13 @@ namespace CapaPresentacion.Modals
             cboRol.DataSource = roles;
             cboRol.DisplayMember = "NombreRol";
             cboRol.ValueMember = "RolId";
+
+            CN_Especialidades _negocioEsp = new CN_Especialidades();
+            var especialidades = _negocioEsp.Listar();
+            especialidades.Insert(0, new Cls_Especialidades { EspecialidadId = 0, NombreEspecialidad = "Sin Especialidad" });
+            cboEspecialidad.DataSource = especialidades;
+            cboEspecialidad.DisplayMember = "NombreEspecialidad";
+            cboEspecialidad.ValueMember = "EspecialidadId";
 
             cboEstado.Items.Add(new { Valor = 1, Texto = "Activo" });
             cboEstado.Items.Add(new { Valor = 2, Texto = "Inactivo" });
@@ -144,8 +156,10 @@ namespace CapaPresentacion.Modals
                 Clave = txtClave.Text.Trim(),
                 RolId = Convert.ToInt32(cboRol.SelectedValue),
                 EstadoId = Convert.ToInt32(((dynamic)cboEstado.SelectedItem).Valor),
+                EspecialidadId = Convert.ToInt32(cboEspecialidad.SelectedValue) == 0 ? (int?)null : Convert.ToInt32(cboEspecialidad.SelectedValue),
                 NombreRol = cboRol.Text,
-                NombreEstado = cboEstado.Text
+                NombreEstado = cboEstado.Text,
+                NombreEspecialidad = Convert.ToInt32(cboEspecialidad.SelectedValue) == 0 ? "" : cboEspecialidad.Text
             };
 
             this.DialogResult = DialogResult.OK;

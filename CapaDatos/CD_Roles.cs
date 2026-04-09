@@ -51,7 +51,12 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@nombreRol", obj.NombreRol);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        idGenerado = Convert.ToInt32(cmd.ExecuteScalar());
+                        
+                        SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
+                        cmd.Parameters.Add(idOut);
+
+                        cmd.ExecuteNonQuery();
+                        idGenerado = (int)idOut.Value;
                         mensaje = "Rol creado correctamente.";
                     }
                 }

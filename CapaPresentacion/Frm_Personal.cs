@@ -67,6 +67,7 @@ namespace CapaPresentacion
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "PersonalId", Name = "personalId", HeaderText = "ID", Visible = false });
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreCompleto", Name = "nombreCompleto", HeaderText = "Nombre Completo", Width = 200 });
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreRol", Name = "nombreRol", HeaderText = "Rol", Width = 120 });
+            dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreEspecialidad", Name = "nombreEspecialidad", HeaderText = "Especialidad", Width = 150 });
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "NombreUsuario", Name = "nombreUsuario", HeaderText = "Usuario", Width = 120 });
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Telefono", Name = "telefono", HeaderText = "Teléfono", Width = 120 });
             dgvData.Columns.Add(new DataGridViewTextBoxColumn { DataPropertyName = "Email", Name = "email", HeaderText = "Email", Width = 150 });
@@ -149,7 +150,8 @@ namespace CapaPresentacion
                 var filtrada = _listaOriginal.Where(x =>
                     (x.NombreCompleto != null && x.NombreCompleto.ToLower().Contains(busqueda)) ||
                     (x.NombreUsuario != null && x.NombreUsuario.ToLower().Contains(busqueda)) ||
-                    (x.NombreRol != null && x.NombreRol.ToLower().Contains(busqueda))
+                    (x.NombreRol != null && x.NombreRol.ToLower().Contains(busqueda)) ||
+                    (x.NombreEspecialidad != null && x.NombreEspecialidad.ToLower().Contains(busqueda))
                 ).ToList();
                 _bindingSource.DataSource = new BindingList<Cls_Personal>(filtrada);
             }

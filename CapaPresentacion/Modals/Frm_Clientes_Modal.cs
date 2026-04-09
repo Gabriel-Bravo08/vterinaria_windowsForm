@@ -11,6 +11,43 @@ namespace CapaPresentacion.Modals
         private ComboBox cboEstado;
         private Label lblNom, lblApe, lblTel, lblMail, lblDir, lblEst;
 
+        private void InitializeComponent()
+        {
+            this.pnlHeader.SuspendLayout();
+            this.pnlFooter.SuspendLayout();
+            this.SuspendLayout();
+            // 
+            // btnMaximize
+            // 
+            this.btnMaximize.FlatAppearance.BorderSize = 0;
+            // 
+            // pnlFooter
+            // 
+            this.pnlFooter.Location = new System.Drawing.Point(2, 735);
+            // 
+            // btnAccept
+            // 
+            this.btnAccept.FlatAppearance.BorderSize = 0;
+            // 
+            // btnCancel
+            // 
+            this.btnCancel.FlatAppearance.BorderSize = 0;
+            // 
+            // pnlContent
+            // 
+            this.pnlContent.Size = new System.Drawing.Size(496, 678);
+            // 
+            // Frm_Clientes_Modal
+            // 
+            this.ClientSize = new System.Drawing.Size(500, 807);
+            this.Name = "Frm_Clientes_Modal";
+            this.pnlHeader.ResumeLayout(false);
+            this.pnlHeader.PerformLayout();
+            this.pnlFooter.ResumeLayout(false);
+            this.ResumeLayout(false);
+
+        }
+
         public Cls_Clientes ObjetoResultado { get; set; }
         private int _clienteId = 0;
 

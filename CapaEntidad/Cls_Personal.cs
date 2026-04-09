@@ -19,6 +19,7 @@ namespace CapaEntidad
         private string _clave;
         private int _rolId;
         private int _estadoId;
+        private int? _especialidadId;
         private DateTime _fechaCreacion;
 
         public int PersonalId
@@ -87,8 +88,15 @@ namespace CapaEntidad
             set { _estadoId = value; }
         }
 
+        public int? EspecialidadId
+        {
+            get { return _especialidadId; }
+            set { _especialidadId = value; }
+        }
+
         public string NombreRol { get; set; }
         public string NombreEstado { get; set; }
+        public string NombreEspecialidad { get; set; }
         public string NombreCompleto => $"{_primerNombre} {_primerApellido}";
 
         public DateTime FechaCreacion

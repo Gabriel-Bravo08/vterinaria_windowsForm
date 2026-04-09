@@ -38,8 +38,10 @@ namespace CapaDatos
                                 NombreUsuario = dr["nombreUsuario"].ToString(),
                                 RolId = Convert.ToInt32(dr["rolId"]),
                                 EstadoId = Convert.ToInt32(dr["estadoId"]),
+                                EspecialidadId = dr["especialidadId"] == DBNull.Value ? (int?)null : Convert.ToInt32(dr["especialidadId"]),
                                 NombreRol = dr["nombreRol"].ToString(),
-                                NombreEstado = dr["nombreEstado"].ToString()
+                                NombreEstado = dr["nombreEstado"].ToString(),
+                                NombreEspecialidad = dr["nombreEspecialidad"]?.ToString()
                             });
                         }
                     }
@@ -71,6 +73,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@clave", obj.Clave);
                         cmd.Parameters.AddWithValue("@rolId", obj.RolId);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
+                        cmd.Parameters.AddWithValue("@especialidadId", (object)obj.EspecialidadId ?? DBNull.Value);
                         
                         SqlParameter idOut = new SqlParameter("@IdGenerado", SqlDbType.Int) { Direction = ParameterDirection.Output };
                         cmd.Parameters.Add(idOut);
@@ -109,6 +112,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@clave", obj.Clave ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@rolId", obj.RolId);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
+                        cmd.Parameters.AddWithValue("@especialidadId", (object)obj.EspecialidadId ?? DBNull.Value);
                         resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Personal actualizado correctamente.";
                     }
