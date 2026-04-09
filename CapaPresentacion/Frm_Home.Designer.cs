@@ -54,7 +54,7 @@ namespace CapaPresentacion
             // 
             this.statusStripPrincipal.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.tslUsuarioLabel});
-            this.statusStripPrincipal.Location = new System.Drawing.Point(0, 707);
+            this.statusStripPrincipal.Location = new System.Drawing.Point(0, 817);
             this.statusStripPrincipal.Name = "statusStripPrincipal";
             this.statusStripPrincipal.Size = new System.Drawing.Size(1264, 22);
             this.statusStripPrincipal.TabIndex = 1;
@@ -75,7 +75,7 @@ namespace CapaPresentacion
             this.pnlSidebar.Location = new System.Drawing.Point(0, 0);
             this.pnlSidebar.Margin = new System.Windows.Forms.Padding(0);
             this.pnlSidebar.Name = "pnlSidebar";
-            this.pnlSidebar.Size = new System.Drawing.Size(260, 707);
+            this.pnlSidebar.Size = new System.Drawing.Size(260, 817);
             this.pnlSidebar.TabIndex = 3;
             // 
             // flpMenu
@@ -86,7 +86,7 @@ namespace CapaPresentacion
             this.flpMenu.Location = new System.Drawing.Point(0, 100);
             this.flpMenu.Name = "flpMenu";
             this.flpMenu.Padding = new System.Windows.Forms.Padding(10, 20, 10, 0);
-            this.flpMenu.Size = new System.Drawing.Size(260, 607);
+            this.flpMenu.Size = new System.Drawing.Size(260, 717);
             this.flpMenu.TabIndex = 1;
             this.flpMenu.WrapContents = false;
             // 
@@ -128,7 +128,7 @@ namespace CapaPresentacion
             this.pnlContent.Location = new System.Drawing.Point(260, 0);
             this.pnlContent.Margin = new System.Windows.Forms.Padding(0);
             this.pnlContent.Name = "pnlContent";
-            this.pnlContent.Size = new System.Drawing.Size(1004, 707);
+            this.pnlContent.Size = new System.Drawing.Size(1004, 817);
             this.pnlContent.TabIndex = 4;
             // 
             // pnlTopHeader
@@ -253,10 +253,10 @@ namespace CapaPresentacion
             this.pnlContainer.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(248)))), ((int)(((byte)(250)))), ((int)(((byte)(252)))));
             this.pnlContainer.Controls.Add(this.picLogo);
             this.pnlContainer.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.pnlContainer.Location = new System.Drawing.Point(0, 65);
+            this.pnlContainer.Location = new System.Drawing.Point(0, 0);
             this.pnlContainer.Name = "pnlContainer";
             this.pnlContainer.Padding = new System.Windows.Forms.Padding(15);
-            this.pnlContainer.Size = new System.Drawing.Size(1004, 642);
+            this.pnlContainer.Size = new System.Drawing.Size(1004, 817);
             this.pnlContainer.TabIndex = 3;
             // 
             // picLogo
@@ -264,7 +264,7 @@ namespace CapaPresentacion
             this.picLogo.Dock = System.Windows.Forms.DockStyle.Fill;
             this.picLogo.Location = new System.Drawing.Point(15, 15);
             this.picLogo.Name = "picLogo";
-            this.picLogo.Size = new System.Drawing.Size(974, 612);
+            this.picLogo.Size = new System.Drawing.Size(974, 787);
             this.picLogo.SizeMode = System.Windows.Forms.PictureBoxSizeMode.CenterImage;
             this.picLogo.TabIndex = 2;
             this.picLogo.TabStop = false;
@@ -285,7 +285,7 @@ namespace CapaPresentacion
             this.tlpMain.Name = "tlpMain";
             this.tlpMain.RowCount = 1;
             this.tlpMain.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 100F));
-            this.tlpMain.Size = new System.Drawing.Size(1264, 707);
+            this.tlpMain.Size = new System.Drawing.Size(1264, 817);
             this.tlpMain.TabIndex = 5;
             // 
             // Frm_Home
@@ -293,7 +293,7 @@ namespace CapaPresentacion
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(1264, 729);
+            this.ClientSize = new System.Drawing.Size(1264, 839);
             this.Controls.Add(this.tlpMain);
             this.Controls.Add(this.statusStripPrincipal);
             this.Name = "Frm_Home";

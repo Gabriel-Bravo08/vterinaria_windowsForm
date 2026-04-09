@@ -102,7 +102,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@direccion", obj.Direccion ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
 
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Cliente actualizado exitosamente.";
                     }
                 }
@@ -129,7 +129,7 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@clienteId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Cliente desactivado exitosamente.";
                     }
                 }

@@ -106,7 +106,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@color", obj.Color ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
 
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Mascota actualizada correctamente.";
                     }
                 }
@@ -134,7 +134,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@mascotaId", id);
 
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Mascota desactivada correctamente.";
                     }
                 }

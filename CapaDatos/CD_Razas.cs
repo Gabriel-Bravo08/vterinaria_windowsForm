@@ -86,7 +86,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@especieId", obj.EspecieId);
                         cmd.Parameters.AddWithValue("@nombreRaza", obj.NombreRaza);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Raza actualizada correctamente.";
                     }
                 }
@@ -109,7 +109,7 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@razaId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Raza desactivada correctamente.";
                     }
                 }

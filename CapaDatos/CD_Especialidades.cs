@@ -82,7 +82,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@especialidadId", obj.EspecialidadId);
                         cmd.Parameters.AddWithValue("@nombreEspecialidad", obj.NombreEspecialidad);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Especialidad actualizada correctamente.";
                     }
                 }
@@ -105,7 +105,7 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@especialidadId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Especialidad desactivada correctamente.";
                     }
                 }

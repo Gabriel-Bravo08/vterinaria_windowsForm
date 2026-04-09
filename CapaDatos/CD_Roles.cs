@@ -1,4 +1,4 @@
-﻿using CapaEntidad;
+using CapaEntidad;
 using Microsoft.Data.SqlClient;
 using System;
 using System.Collections.Generic;
@@ -75,7 +75,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@rolId", obj.RolId);
                         cmd.Parameters.AddWithValue("@nombreRol", obj.NombreRol);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Rol actualizado correctamente.";
                     }
                 }
@@ -97,7 +97,7 @@ namespace CapaDatos
                     {
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@rolId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Rol desactivado correctamente.";
                     }
                 }

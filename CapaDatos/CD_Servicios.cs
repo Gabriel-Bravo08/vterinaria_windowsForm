@@ -88,7 +88,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@descripcion", obj.Descripcion ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@precio", obj.Precio);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Servicio actualizado correctamente.";
                     }
                 }
@@ -111,7 +111,7 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@servicioId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Servicio desactivado correctamente.";
                     }
                 }

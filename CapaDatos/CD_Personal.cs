@@ -109,7 +109,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@clave", obj.Clave ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@rolId", obj.RolId);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Personal actualizado correctamente.";
                     }
                 }
@@ -132,7 +132,7 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolExecId);
                         cmd.Parameters.AddWithValue("@personalId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Personal desactivado correctamente.";
                     }
                 }

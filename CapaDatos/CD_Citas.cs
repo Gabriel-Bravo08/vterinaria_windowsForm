@@ -94,7 +94,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@fechaCita", obj.FechaCita);
                         cmd.Parameters.AddWithValue("@notas", obj.Notas ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Cita actualizada correctamente.";
                     }
                 }
@@ -117,7 +117,7 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@citaId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Cita cancelada correctamente.";
                     }
                 }

@@ -97,7 +97,7 @@ namespace CapaDatos
                         cmd.Parameters.AddWithValue("@observaciones", obj.Observaciones ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@proximaVisita", obj.ProximaVisita ?? (object)DBNull.Value);
                         cmd.Parameters.AddWithValue("@estadoId", obj.EstadoId);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Registro médico actualizado correctamente.";
                     }
                 }
@@ -120,7 +120,7 @@ namespace CapaDatos
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@EjecutadoPorRolId", rolId);
                         cmd.Parameters.AddWithValue("@historialMedicoId", id);
-                        resultado = cmd.ExecuteNonQuery() > 0;
+                        resultado = cmd.ExecuteNonQuery() != 0;
                         if (resultado) mensaje = "Registro médico desactivado correctamente.";
                     }
                 }
